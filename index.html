@@ -33,7 +33,6 @@
             clip-path: polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%);
         }
 
-        /* Animación abejas */
         .bee-animation {
             position: fixed;
             pointer-events: none;
@@ -72,7 +71,6 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
-        /* Modales adaptados a móvil */
         #price-modal, #cart-drawer {
             display: none;
             position: fixed;
@@ -120,16 +118,33 @@
             font-weight: bold;
             border: 2px solid white;
         }
+
+        .custom-alert {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #2d2d2d;
+            color: white;
+            padding: 12px 24px;
+            border-radius: 999px;
+            z-index: 2000;
+            display: none;
+            box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1);
+            font-weight: bold;
+        }
     </style>
 </head>
 <body class="antialiased">
+
+    <div id="alert-box" class="custom-alert"></div>
 
     <!-- Abeja animada -->
     <div class="bee-animation" style="top: 20%;">
         <i class="fas fa-bee text-amber-600 text-2xl"></i>
     </div>
 
-    <!-- Navegación Móvil -->
+    <!-- Navegación -->
     <nav class="sticky top-0 z-50 bg-white/95 backdrop-blur-md border-b-2 border-amber-400 shadow-sm">
         <div class="px-4 h-16 flex justify-between items-center">
             <div class="flex items-center gap-2" onclick="showSection('inicio')">
@@ -146,7 +161,7 @@
         </div>
     </nav>
 
-    <!-- Menú inferior tipo App para móvil -->
+    <!-- Menú inferior -->
     <div class="fixed bottom-0 left-0 right-0 bg-white border-t border-amber-100 z-40 flex justify-around py-3 md:hidden shadow-[0_-5px_15px_rgba(0,0,0,0.05)]">
         <button onclick="showSection('inicio')" class="flex flex-col items-center gap-1 text-amber-900 opacity-60 active:opacity-100">
             <i class="fas fa-home"></i>
@@ -175,9 +190,9 @@
             <p class="text-lg text-amber-800 italic mb-8">"Directo de la colmena de Paco hasta tu hogar."</p>
             
             <div class="relative inline-block mb-10">
-                <img src="MIEL2.png"
-             alt="Miel Paco - Miel fresca 100% natural"
-             class="w-100 h-100 object-cover rounded-xl">
+                <img src="MIEL2.png" 
+                     alt="Miel Paco" 
+                     class="w-64 h-64 object-cover rounded-xl shadow-xl mx-auto border-4 border-white">
             </div>
 
             <button onclick="showSection('productos')" class="honey-button w-full max-w-xs py-4 text-white font-black rounded-2xl uppercase tracking-widest">
@@ -193,7 +208,6 @@
             </div>
 
             <div class="grid gap-6">
-                <!-- Mieles -->
                 <div class="bg-white p-5 rounded-[2.5rem] border-2 border-amber-100 flex items-center gap-4 shadow-sm active:scale-95 transition" onclick="openPriceMenu('miel')">
                     <div class="hexagon-mask w-24 h-24 bg-amber-50 flex-shrink-0">
                         <img src="https://images.unsplash.com/photo-1558642452-9d2a7deb7f62?auto=format&fit=crop&w=200" class="w-full h-full object-cover">
@@ -205,10 +219,9 @@
                     </div>
                 </div>
 
-                <!-- Derivados -->
                 <div class="bg-white p-5 rounded-[2.5rem] border-2 border-amber-100 flex items-center gap-4 shadow-sm active:scale-95 transition" onclick="openPriceMenu('dulces')">
                     <div class="hexagon-mask w-24 h-24 bg-amber-50 flex-shrink-0">
-                       <img src="POPOTES.jpeg" class="w-full h-full object-cover">
+                        <img src="POPOTES.jpeg" class="w-full h-full object-cover">
                     </div>
                     <div>
                         <h3 class="text-xl font-bold text-amber-950">Derivados</h3>
@@ -217,10 +230,9 @@
                     </div>
                 </div>
 
-                <!-- Mayoreo -->
                 <div class="bg-white p-5 rounded-[2.5rem] border-2 border-amber-100 flex items-center gap-4 shadow-sm active:scale-95 transition" onclick="openPriceMenu('toneles')">
                     <div class="hexagon-mask w-24 h-24 bg-amber-50 flex-shrink-0">
-                      <img src="TONEL.jpeg" class="w-full h-full object-cover">
+                        <img src="TONEL.jpeg" class="w-full h-full object-cover">
                     </div>
                     <div>
                         <h3 class="text-xl font-bold text-amber-950">Mayoreo</h3>
@@ -249,7 +261,7 @@
                 <h2 class="text-3xl font-black text-amber-950 mb-2">Tu Pedido</h2>
                 <p class="text-sm text-amber-800 mb-8">Completa tus datos para enviarle el mensaje a Paco.</p>
                 
-                <form onsubmit="sendOrder(event)" class="space-y-5">
+                <form id="order-form" onsubmit="sendOrder(event)" class="space-y-5">
                     <div>
                         <label class="block text-[10px] font-bold text-amber-900 uppercase ml-2 mb-1">Nombre</label>
                         <input required type="text" id="cust-name" class="w-full px-5 py-3 rounded-2xl bg-amber-50 border border-amber-100 outline-none focus:border-amber-400" placeholder="¿Quién recibe?">
@@ -272,29 +284,23 @@
 
     <!-- Modal Precios -->
     <div id="price-modal" onclick="closePriceMenu()" class="items-end md:items-center justify-center">
-        <div class="bg-white rounded-t-[2.5rem] md:rounded-[2.5rem] w-full max-w-md p-6 max-h-[85vh] overflow-hidden flex flex-col shadow-2xl animate-slide-up" onclick="event.stopPropagation()">
+        <div class="bg-white rounded-t-[2.5rem] md:rounded-[2.5rem] w-full max-w-md p-6 max-h-[85vh] overflow-hidden flex flex-col shadow-2xl" onclick="event.stopPropagation()">
             <div class="flex justify-between items-center mb-6">
                 <h2 id="modal-title" class="text-2xl font-black text-amber-950 uppercase tracking-tighter">Variedades</h2>
                 <button onclick="closePriceMenu()" class="p-2 text-amber-900"><i class="fas fa-times text-xl"></i></button>
             </div>
-            <div id="modal-content" class="space-y-3 overflow-y-auto pr-2">
-                <!-- Dinámico -->
-            </div>
+            <div id="modal-content" class="space-y-3 overflow-y-auto pr-2"></div>
         </div>
     </div>
 
-    <!-- Carrito Drawer -->
+    <!-- Carrito -->
     <div id="cart-drawer" onclick="toggleCart()">
         <div class="drawer-content p-6 shadow-2xl" onclick="event.stopPropagation()">
             <div class="flex justify-between items-center mb-6">
                 <h2 class="text-2xl font-black text-amber-950 italic"><i class="fas fa-shopping-basket mr-2"></i>Tu Panal</h2>
                 <button onclick="toggleCart()"><i class="fas fa-times text-2xl text-amber-900"></i></button>
             </div>
-            
-            <div id="cart-items" class="flex-grow overflow-y-auto space-y-3">
-                <!-- Dinámico -->
-            </div>
-
+            <div id="cart-items" class="flex-grow overflow-y-auto space-y-3"></div>
             <div class="pt-6 mt-4 border-t-2 border-amber-100">
                 <div class="flex justify-between text-xl font-black text-amber-950 mb-4">
                     <span>Total:</span>
@@ -307,29 +313,26 @@
             </div>
         </div>
     </div>
-<!-- Firebase -->
-<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-analytics-compat.js"></script>
 
-<script>
-  const firebaseConfig = {
-apiKey: "AIzaSyD5UHwusfw0CZKsx34KCjOxlRgOGhW7dXc",
-authDomain: "pacomieloso.firebaseapp.com",
-projectId: "pacomieloso",
-storageBucket: "pacomieloso.firebasestorage.app",
-messagingSenderId: "142749522913",
-appId: "1:142749522913:web:6e496df2b6b72b5ede50a0",
-measurementId: "G-9R8NNJ39F2"
-  };
+    <!-- Firebase -->
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
 
-  firebase.initializeApp(firebaseConfig);
-  firebase.analytics();
-  const db = firebase.firestore();
-
-  console.log("Firebase conectado ✅");
-</script>
     <script>
+        // Configuración de Firebase
+        const firebaseConfig = {
+            apiKey: "AIzaSyD5UHwusfw0CZKsx34KCjOxlRgOGhW7dXc",
+            authDomain: "pacomieloso.firebaseapp.com",
+            projectId: "pacomieloso",
+            storageBucket: "pacomieloso.firebasestorage.app",
+            messagingSenderId: "142749522913",
+            appId: "1:142749522913:web:6e496df2b6b72b5ede50a0",
+            measurementId: "G-9R8NNJ39F2"
+        };
+
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+
         const products = {
             miel: {
                 title: "Mieles Puras",
@@ -367,7 +370,6 @@ measurementId: "G-9R8NNJ39F2"
             const data = products[cat];
             document.getElementById('modal-title').innerText = data.title;
             const content = document.getElementById('modal-content');
-            
             content.innerHTML = data.items.map(p => `
                 <div class="flex items-center gap-3 bg-amber-50 p-3 rounded-2xl border border-amber-100">
                     <img src="${p.img}" class="w-12 h-12 rounded-xl object-cover shadow-sm">
@@ -380,7 +382,6 @@ measurementId: "G-9R8NNJ39F2"
                     </button>
                 </div>
             `).join('');
-
             document.getElementById('price-modal').classList.add('open');
         }
 
@@ -392,9 +393,7 @@ measurementId: "G-9R8NNJ39F2"
             const existing = cart.find(i => i.id === id);
             if (existing) existing.qty++;
             else cart.push({ id, name, price, qty: 1 });
-            
             saveAndUpdate();
-            // Feedback visual en móvil
             const badge = document.getElementById('cart-count');
             badge.style.transform = "scale(1.5)";
             setTimeout(() => badge.style.transform = "scale(1)", 200);
@@ -430,10 +429,8 @@ measurementId: "G-9R8NNJ39F2"
 
             const total = cart.reduce((s, i) => s + (i.price * i.qty), 0);
             const count = cart.reduce((s, i) => s + i.qty, 0);
-            
             totalEl.innerText = `$${total.toFixed(2)}`;
             countEl.innerText = count;
-            
             updateOrderSummary();
         }
 
@@ -469,18 +466,21 @@ measurementId: "G-9R8NNJ39F2"
             showSection('contacto');
         }
 
-       const products = {
-   // tus productos
-};
+        function showAlert(msg) {
+            const box = document.getElementById('alert-box');
+            box.innerText = msg;
+            box.style.display = 'block';
+            setTimeout(() => box.style.display = 'none', 3000);
+        }
 
-async function sendOrder(e) {
+        async function sendOrder(e) {
     e.preventDefault();
 
-    const name = document.getElementById('cust-name').value;
-    const phone = document.getElementById('cust-phone').value;
+    const name = document.getElementById('cust-name').value.trim();
+    const phone = document.getElementById('cust-phone').value.trim();
 
     if (cart.length === 0) {
-        alert("El carrito está vacío");
+        showAlert("El carrito está vacío");
         return;
     }
 
@@ -497,30 +497,53 @@ async function sendOrder(e) {
 
     try {
         await db.collection("pedidos").add(pedido);
-        alert("Pedido guardado correctamente ✅");
+        showAlert("Pedido guardado ✅");
     } catch (error) {
         console.error("Error guardando pedido:", error);
-        alert("Error al guardar pedido");
+        showAlert("Error al guardar pedido");
         return;
     }
 
-    let mensaje = `Nuevo pedido:\n\n`;
-    cart.forEach(item => {
-        mensaje += `${item.name} x${item.qty}\n`;
-    });
-    mensaje += `\nTotal: $${total}\n`;
-    mensaje += `Cliente: ${name}\nTel: ${phone}`;
+    // // 🧾 Generar número de pedido automático
+const orderNumber = "MP-" + Date.now().toString().slice(-6);
+
+// 🕒 Fecha y hora
+const now = new Date();
+const fecha = now.toLocaleDateString("es-MX");
+const hora = now.toLocaleTimeString("es-MX");
+
+// 📲 Mensaje WhatsApp NIVEL EMPRESA
+let mensaje = `🐝✨ *PACOMIELOSO - NUEVO PEDIDO* ✨🐝\n`;
+mensaje += `━━━━━━━━━━━━━━━━━━━━\n`;
+mensaje += `🧾 Pedido: *${orderNumber}*\n`;
+mensaje += `📅 Fecha: ${fecha}\n`;
+mensaje += `⏰ Hora: ${hora}\n`;
+mensaje += `━━━━━━━━━━━━━━━━━━━━\n\n`;
+
+cart.forEach((item, index) => {
+    const subtotal = (item.price * item.qty).toFixed(2);
+    mensaje += `🍯 *${item.name}*\n`;
+    mensaje += `   ▸ Cantidad: ${item.qty}\n`;
+    mensaje += `   ▸ Precio unit: $${item.price.toFixed(2)}\n`;
+    mensaje += `   ▸ Subtotal: $${subtotal}\n\n`;
+});
+
+mensaje += `━━━━━━━━━━━━━━━━━━━━\n`;
+mensaje += `💰 *TOTAL GENERAL: $${total.toFixed(2)}*\n`;
+mensaje += `━━━━━━━━━━━━━━━━━━━━\n\n`;
+mensaje += `👤 *Cliente:* ${name}\n`;
+mensaje += `📞 *WhatsApp:* ${phone}\n\n`;
+mensaje += `🌼 Pedido generado desde la tienda web`;
 
     const whatsappURL = `https://wa.me/522371062600?text=${encodeURIComponent(mensaje)}`;
     window.open(whatsappURL, "_blank");
 
+    // Limpiar carrito
     clearCart();
+    document.getElementById('cust-name').value = '';
+    document.getElementById('cust-phone').value = '';
+    showSection('inicio');
 }
-
-        document.addEventListener('DOMContentLoaded', updateCartUI);
     </script>
 </body>
 </html>
-
-
-
