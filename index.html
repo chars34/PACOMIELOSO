@@ -469,27 +469,58 @@ measurementId: "G-9R8NNJ39F2"
             showSection('contacto');
         }
 
-        function sendOrder(e) {
-            e.preventDefault();
-            const name = document.getElementById('cust-name').value;
-            const phone = document.getElementById('cust-phone').value;
-            const summary = document.getElementById('order-details').value;
-            
-            const fullMessage = `${summary}\n\nCliente: ${name}\nTeléfono: ${phone}`;
-            const whatsappUrl = `https://wa.me/1234567890?text=${encodeURIComponent(fullMessage)}`;
-            
-            window.open(whatsappUrl, '_blank');
-            
-            // Opcional: limpiar al enviar
-            clearCart();
-            document.getElementById('cust-name').value = '';
-            document.getElementById('cust-phone').value = '';
-            showSection('inicio');
-        }
+       const products = {
+   // tus productos
+};
+
+async function sendOrder(e) {
+    e.preventDefault();
+
+    const name = document.getElementById('cust-name').value;
+    const phone = document.getElementById('cust-phone').value;
+
+    if (cart.length === 0) {
+        alert("El carrito está vacío");
+        return;
+    }
+
+    const total = cart.reduce((sum, item) => sum + (item.price * item.qty), 0);
+
+    const pedido = {
+        cliente: name,
+        telefono: phone,
+        productos: cart,
+        total: total,
+        fecha: firebase.firestore.FieldValue.serverTimestamp(),
+        estado: "nuevo"
+    };
+
+    try {
+        await db.collection("pedidos").add(pedido);
+        alert("Pedido guardado correctamente ✅");
+    } catch (error) {
+        console.error("Error guardando pedido:", error);
+        alert("Error al guardar pedido");
+        return;
+    }
+
+    let mensaje = `Nuevo pedido:\n\n`;
+    cart.forEach(item => {
+        mensaje += `${item.name} x${item.qty}\n`;
+    });
+    mensaje += `\nTotal: $${total}\n`;
+    mensaje += `Cliente: ${name}\nTel: ${phone}`;
+
+    const whatsappURL = `https://wa.me/522371062600?text=${encodeURIComponent(mensaje)}`;
+    window.open(whatsappURL, "_blank");
+
+    clearCart();
+}
 
         document.addEventListener('DOMContentLoaded', updateCartUI);
     </script>
 </body>
 </html>
+
 
 
