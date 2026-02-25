@@ -23,62 +23,102 @@
             color: var(--bee-black);
             overflow-x: hidden;
             -webkit-tap-highlight-color: transparent;
+            scroll-behavior: smooth;
         }
 
         h1, h2, h3 {
             font-family: 'Playfair Display', serif;
         }
 
+        /* --- Animaciones de Entrada --- */
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s ease-out;
+        }
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
         .hexagon-mask {
             clip-path: polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%);
         }
 
+        /* Abeja mejorada con movimiento aleatorio suave */
         .bee-animation {
             position: fixed;
             pointer-events: none;
             z-index: 40;
-            animation: fly 15s linear infinite;
-            opacity: 0.4;
+            animation: flyPath 20s linear infinite, hover 2s ease-in-out infinite;
+            opacity: 0.6;
         }
 
-        @keyframes fly {
-            0% { transform: translate(-20vw, 20vh) rotate(0deg); }
-            100% { transform: translate(120vw, 15vh) rotate(10deg); }
+        @keyframes flyPath {
+            0% { left: -10%; top: 20%; transform: scaleX(1); }
+            45% { left: 110%; top: 40%; transform: scaleX(1); }
+            50% { left: 110%; top: 60%; transform: scaleX(-1); }
+            95% { left: -10%; top: 80%; transform: scaleX(-1); }
+            100% { left: -10%; top: 20%; transform: scaleX(1); }
         }
 
+        @keyframes hover {
+            0%, 100% { margin-top: 0px; }
+            50% { margin-top: -15px; }
+        }
+
+        /* Botón estilo miel viscosa */
         .honey-button {
-            background: linear-gradient(to bottom, #FFB100, #d97706);
+            background: linear-gradient(135deg, #FFB100, #d97706);
             box-shadow: 0 4px 0 #92400e;
-            transition: all 0.1s;
+            transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .honey-button::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: rgba(255,255,255,0.1);
+            transform: rotate(45deg);
+            transition: 0.5s;
         }
 
         .honey-button:active {
-            transform: translateY(2px);
+            transform: translateY(2px) scale(0.98);
             box-shadow: 0 2px 0 #92400e;
         }
 
         .page-section {
             display: none;
-            animation: fadeIn 0.4s ease-out forwards;
+            animation: sectionIn 0.5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
         }
 
         .page-section.active {
             display: block;
         }
 
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
+        @keyframes sectionIn {
+            from { opacity: 0; transform: scale(0.95) translateY(20px); }
+            to { opacity: 1; transform: scale(1) translateY(0); }
         }
 
+        /* Modales y Carrito */
         #price-modal, #cart-drawer {
             display: none;
             position: fixed;
             inset: 0;
             z-index: 1000;
-            background: rgba(45, 45, 45, 0.7);
-            backdrop-filter: blur(4px);
+            background: rgba(45, 40, 20, 0.6);
+            backdrop-filter: blur(8px);
+            animation: fadeIn 0.3s ease;
         }
+
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
         #price-modal.open, #cart-drawer.open {
             display: flex;
@@ -89,12 +129,12 @@
             right: 0;
             top: 0;
             height: 100%;
-            width: 85%;
+            width: 90%;
             max-width: 400px;
             background: white;
             display: flex;
             flex-direction: column;
-            animation: slideInRight 0.3s ease-out;
+            animation: slideInRight 0.4s cubic-bezier(0.075, 0.82, 0.165, 1);
         }
 
         @keyframes slideInRight {
@@ -104,34 +144,67 @@
 
         .cart-badge {
             position: absolute;
-            top: -2px;
-            right: -2px;
+            top: -4px;
+            right: -4px;
             background: #ef4444;
             color: white;
-            font-size: 0.65rem;
-            width: 18px;
-            height: 18px;
-            border-radius: 50%;
+            font-size: 0.7rem;
+            min-width: 20px;
+            height: 20px;
+            padding: 0 4px;
+            border-radius: 999px;
             display: flex;
             align-items: center;
             justify-content: center;
             font-weight: bold;
             border: 2px solid white;
+            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        /* Decoración de Goteo de Miel */
+        .dripping-honey {
+            height: 10px;
+            background: var(--honey-yellow);
+            position: relative;
+            border-radius: 0 0 10px 10px;
+        }
+        
+        .dripping-honey::before {
+            content: '';
+            position: absolute;
+            left: 20%; top: 100%;
+            width: 12px; height: 20px;
+            background: var(--honey-yellow);
+            border-radius: 0 0 10px 10px;
+            animation: drip 3s infinite;
+        }
+
+        @keyframes drip {
+            0% { height: 10px; opacity: 1; }
+            50% { height: 25px; }
+            100% { height: 10px; opacity: 0.5; }
         }
 
         .custom-alert {
             position: fixed;
-            top: 20px;
+            top: 25px;
             left: 50%;
             transform: translateX(-50%);
             background: #2d2d2d;
             color: white;
-            padding: 12px 24px;
-            border-radius: 999px;
+            padding: 14px 28px;
+            border-radius: 20px;
             z-index: 2000;
             display: none;
-            box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.2);
             font-weight: bold;
+            border-bottom: 4px solid var(--honey-yellow);
+            animation: bounceIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        @keyframes bounceIn {
+            from { opacity: 0; transform: translate(-50%, -50px); }
+            to { opacity: 1; transform: translate(-50%, 0); }
         }
     </style>
 </head>
@@ -139,182 +212,232 @@
 
     <div id="alert-box" class="custom-alert"></div>
 
-    <!-- Abeja animada -->
-    <div class="bee-animation" style="top: 20%;">
-        <i class="fas fa-bee text-amber-600 text-2xl"></i>
+    <!-- Abeja Animada -->
+    <div class="bee-animation">
+        <div class="relative">
+            <i class="fas fa-bee text-amber-600 text-3xl drop-shadow-md"></i>
+            <span class="absolute -top-1 -right-1 w-2 h-2 bg-white/40 rounded-full animate-ping"></span>
+        </div>
     </div>
 
-    <!-- Navegación -->
-    <nav class="sticky top-0 z-50 bg-white/95 backdrop-blur-md border-b-2 border-amber-400 shadow-sm">
-        <div class="px-4 h-16 flex justify-between items-center">
-            <div class="flex items-center gap-2" onclick="showSection('inicio')">
-                <div class="bg-amber-400 p-1.5 hexagon-mask">
+    <!-- Navegación Superior -->
+    <nav class="sticky top-0 z-50 bg-white/90 backdrop-blur-lg border-b-2 border-amber-400/30">
+        <div class="px-6 h-16 flex justify-between items-center max-w-5xl mx-auto">
+            <div class="flex items-center gap-3 cursor-pointer group" onclick="showSection('inicio')">
+                <div class="bg-amber-400 p-2 hexagon-mask group-hover:rotate-12 transition-transform duration-300">
                     <i class="fas fa-archive text-white text-sm"></i>
                 </div>
                 <span class="text-xl font-black text-amber-950 italic uppercase tracking-tighter">PACOMIELOSO</span>
             </div>
             
-            <button onclick="toggleCart()" class="relative bg-amber-100 p-2.5 rounded-full text-amber-800 active:scale-90 transition">
-                <i class="fas fa-shopping-basket text-lg"></i>
+            <button onclick="toggleCart()" class="relative bg-amber-50 p-3 rounded-2xl text-amber-800 hover:bg-amber-100 active:scale-90 transition-all border border-amber-200">
+                <i class="fas fa-shopping-basket text-xl"></i>
                 <span id="cart-count" class="cart-badge">0</span>
             </button>
         </div>
+        <div class="dripping-honey opacity-50"></div>
     </nav>
 
-    <!-- Menú inferior -->
-    <div class="fixed bottom-0 left-0 right-0 bg-white border-t border-amber-100 z-40 flex justify-around py-3 md:hidden shadow-[0_-5px_15px_rgba(0,0,0,0.05)]">
-        <button onclick="showSection('inicio')" class="flex flex-col items-center gap-1 text-amber-900 opacity-60 active:opacity-100">
-            <i class="fas fa-home"></i>
-            <span class="text-[10px] font-bold uppercase">Inicio</span>
+    <!-- Menú Inferior Móvil -->
+    <div class="fixed bottom-0 left-0 right-0 bg-white/95 backdrop-blur-md border-t border-amber-100 z-40 flex justify-around py-4 md:hidden shadow-[0_-5px_25px_rgba(0,0,0,0.05)] rounded-t-3xl">
+        <button onclick="showSection('inicio')" class="flex flex-col items-center gap-1 text-amber-900 group">
+            <i class="fas fa-home text-lg transition-transform group-hover:-translate-y-1"></i>
+            <span class="text-[10px] font-black uppercase tracking-widest">Inicio</span>
         </button>
-        <button onclick="showSection('productos')" class="flex flex-col items-center gap-1 text-amber-900 opacity-60 active:opacity-100">
-            <i class="fas fa-store"></i>
-            <span class="text-[10px] font-bold uppercase">Tienda</span>
+        <button onclick="showSection('productos')" class="flex flex-col items-center gap-1 text-amber-900 group">
+            <i class="fas fa-store text-lg transition-transform group-hover:-translate-y-1"></i>
+            <span class="text-[10px] font-black uppercase tracking-widest">Tienda</span>
         </button>
-        <button onclick="showSection('nosotros')" class="flex flex-col items-center gap-1 text-amber-900 opacity-60 active:opacity-100">
-            <i class="fas fa-user-friends"></i>
-            <span class="text-[10px] font-bold uppercase">Paco</span>
+        <button onclick="showSection('nosotros')" class="flex flex-col items-center gap-1 text-amber-900 group">
+            <i class="fas fa-user-friends text-lg transition-transform group-hover:-translate-y-1"></i>
+            <span class="text-[10px] font-black uppercase tracking-widest">Paco</span>
         </button>
-        <button onclick="showSection('contacto')" class="flex flex-col items-center gap-1 text-amber-900 opacity-60 active:opacity-100">
-            <i class="fas fa-paper-plane"></i>
-            <span class="text-[10px] font-bold uppercase">Pedido</span>
+        <button onclick="showSection('contacto')" class="flex flex-col items-center gap-1 text-amber-900 group">
+            <i class="fas fa-paper-plane text-lg transition-transform group-hover:-translate-y-1"></i>
+            <span class="text-[10px] font-black uppercase tracking-widest">Pedido</span>
         </button>
     </div>
 
-    <main class="pb-20">
-        <!-- Hero Section -->
-        <section id="inicio" class="page-section active px-4 pt-10 pb-16 text-center">
-            <h1 class="text-6xl font-black text-amber-950 leading-tight mb-4">
-                MIEL <br> <span class="text-amber-500 underline decoration-amber-200 decoration-4">PACO</span>
-            </h1>
-            <p class="text-lg text-amber-800 italic mb-8">"Directo de la colmena de Paco hasta tu hogar."</p>
-            
-            <div class="relative inline-block mb-10">
-                <img src="MIEL2.png" 
-                     alt="Miel Paco" 
-                     class="w-90 h-90 object-cover ">
-            </div>
+    <main class="pb-24 max-w-5xl mx-auto">
+        <!-- Inicio / Hero -->
+        <section id="inicio" class="page-section active px-6 pt-12 pb-16 text-center">
+            <div class="reveal">
+                <span class="inline-block px-4 py-1 bg-amber-100 text-amber-700 rounded-full text-xs font-bold uppercase tracking-widest mb-4">100% Orgánico</span>
+                <h1 class="text-6xl md:text-8xl font-black text-amber-950 leading-[0.9] mb-6">
+                    ORO <br> <span class="text-amber-500 italic relative">LÍQUIDO<span class="absolute bottom-1 left-0 w-full h-3 bg-amber-200 -z-10 rounded-full"></span></span>
+                </h1>
+                <p class="text-lg text-amber-800 italic mb-10 max-w-md mx-auto leading-relaxed">"Delicadamente recolectada por Paco, honrando a las abejas en cada gota."</p>
+                
+                <div class="relative inline-block mb-12 animate-float">
+                    <img src="MIEL2.png" alt="Miel Paco" class="w-80 h-auto object-contain drop-shadow-[0_25px_25px_rgba(217,119,6,0.3)]">
+                    <div class="absolute -bottom-4 -right-4 bg-white p-4 rounded-3xl shadow-lg border-2 border-amber-400 rotate-12">
+                        <span class="block font-black text-amber-950 text-xl">Súper Dulce</span>
+                    </div>
+                </div>
 
-            <button onclick="showSection('productos')" class="honey-button w-full max-w-xs py-4 text-white font-black rounded-2xl uppercase tracking-widest">
-                Ver el Catálogo
-            </button>
+                <div>
+                    <button onclick="showSection('productos')" class="honey-button px-10 py-5 text-white font-black rounded-3xl uppercase tracking-widest text-lg shadow-xl">
+                        Descubre el Sabor
+                    </button>
+                </div>
+            </div>
         </section>
 
         <!-- Productos -->
-        <section id="productos" class="page-section py-12 px-4">
-            <div class="text-center mb-10">
+        <section id="productos" class="page-section py-16 px-6">
+            <div class="text-center mb-12 reveal">
                 <h2 class="text-4xl font-black text-amber-950">Nuestra Cosecha</h2>
-                <div class="h-1 w-20 bg-amber-400 mx-auto mt-2 rounded-full"></div>
+                <p class="text-amber-700 mt-2 font-medium">Selección premium de la temporada</p>
+                <div class="h-1.5 w-16 bg-amber-400 mx-auto mt-4 rounded-full"></div>
             </div>
 
-            <div class="grid gap-6">
-                <div class="bg-white p-5 rounded-[2.5rem] border-2 border-amber-100 flex items-center gap-4 shadow-sm active:scale-95 transition" onclick="openPriceMenu('miel')">
-                    <div class="hexagon-mask w-24 h-24 bg-amber-50 flex-shrink-0">
-                        <img src="https://images.unsplash.com/photo-1558642452-9d2a7deb7f62?auto=format&fit=crop&w=200" class="w-full h-full object-cover">
+            <div class="grid md:grid-cols-2 gap-8">
+                <!-- Card 1 -->
+                <div class="reveal bg-white p-6 rounded-[3rem] border-2 border-amber-100 flex items-center gap-6 shadow-sm hover:shadow-xl hover:border-amber-300 transition-all cursor-pointer group" onclick="openPriceMenu('miel')">
+                    <div class="hexagon-mask w-28 h-28 bg-amber-50 overflow-hidden flex-shrink-0 group-hover:scale-110 transition-transform">
+                        <img src="https://images.unsplash.com/photo-1558642452-9d2a7deb7f62?auto=format&fit=crop&w=300" class="w-full h-full object-cover">
                     </div>
                     <div>
-                        <h3 class="text-xl font-bold text-amber-950">Mieles Puras</h3>
-                        <p class="text-xs text-amber-700 uppercase tracking-tighter">Variedades de Floración</p>
-                        <span class="text-amber-500 text-[10px] font-bold italic">Toca para ver precios</span>
+                        <h3 class="text-2xl font-black text-amber-950">Mieles Puras</h3>
+                        <p class="text-sm text-amber-700 uppercase font-bold tracking-wider mb-2">Multifloral & Premium</p>
+                        <span class="inline-block bg-amber-500 text-white px-4 py-1.5 rounded-full text-[10px] font-black">VER CATÁLOGO</span>
                     </div>
                 </div>
 
-                <div class="bg-white p-5 rounded-[2.5rem] border-2 border-amber-100 flex items-center gap-4 shadow-sm active:scale-95 transition" onclick="openPriceMenu('dulces')">
-                    <div class="hexagon-mask w-24 h-24 bg-amber-50 flex-shrink-0">
-                        <img src="POPOTES.jpeg" class="w-full h-full object-cover">
+                <!-- Card 2 -->
+                <div class="reveal bg-white p-6 rounded-[3rem] border-2 border-amber-100 flex items-center gap-6 shadow-sm hover:shadow-xl hover:border-amber-300 transition-all cursor-pointer group" onclick="openPriceMenu('dulces')">
+                    <div class="hexagon-mask w-28 h-28 bg-amber-50 overflow-hidden flex-shrink-0 group-hover:scale-110 transition-transform">
+                        <img src="POPOTES.jpeg" class="w-full h-full object-cover" onerror="this.src='https://images.unsplash.com/photo-1582053433976-25c00369fc93?w=300'">
                     </div>
                     <div>
-                        <h3 class="text-xl font-bold text-amber-950">Derivados</h3>
-                        <p class="text-xs text-amber-700 uppercase tracking-tighter">Caramelos y Jalea</p>
-                        <span class="text-amber-500 text-[10px] font-bold italic">Toca para ver precios</span>
+                        <h3 class="text-2xl font-black text-amber-950">Derivados</h3>
+                        <p class="text-sm text-amber-700 uppercase font-bold tracking-wider mb-2">Energía Natural</p>
+                        <span class="inline-block bg-amber-500 text-white px-4 py-1.5 rounded-full text-[10px] font-black">VER CATÁLOGO</span>
                     </div>
                 </div>
 
-                <div class="bg-white p-5 rounded-[2.5rem] border-2 border-amber-100 flex items-center gap-4 shadow-sm active:scale-95 transition" onclick="openPriceMenu('toneles')">
-                    <div class="hexagon-mask w-24 h-24 bg-amber-50 flex-shrink-0">
-                        <img src="TONEL.jpeg" class="w-full h-full object-cover">
+                <!-- Card 3 -->
+                <div class="reveal bg-white p-6 rounded-[3rem] border-2 border-amber-100 flex items-center gap-6 shadow-sm hover:shadow-xl hover:border-amber-300 transition-all cursor-pointer group" onclick="openPriceMenu('toneles')">
+                    <div class="hexagon-mask w-28 h-28 bg-amber-50 overflow-hidden flex-shrink-0 group-hover:scale-110 transition-transform">
+                        <img src="TONEL.jpeg" class="w-full h-full object-cover" onerror="this.src='https://images.unsplash.com/photo-1582234372722-50d7ccc30ebd?w=300'">
                     </div>
                     <div>
-                        <h3 class="text-xl font-bold text-amber-950">Mayoreo</h3>
-                        <p class="text-xs text-amber-700 uppercase tracking-tighter">Cubetas y Toneles</p>
-                        <span class="text-amber-500 text-[10px] font-bold italic">Toca para ver precios</span>
+                        <h3 class="text-2xl font-black text-amber-950">Mayoreo</h3>
+                        <p class="text-sm text-amber-700 uppercase font-bold tracking-wider mb-2">Directo del Panal</p>
+                        <span class="inline-block bg-amber-500 text-white px-4 py-1.5 rounded-full text-[10px] font-black">VER PRECIOS</span>
                     </div>
                 </div>
             </div>
         </section>
 
         <!-- El Apicultor -->
-        <section id="nosotros" class="page-section py-16 px-6 bg-amber-950 text-white rounded-[3rem] mx-2 my-8">
-            <h2 class="text-4xl font-black text-amber-400 italic mb-6">Paco: Amigo de las Abejas</h2>
-            <img src="https://images.unsplash.com/photo-1473976140626-9abc729ea204?auto=format&fit=crop&w=400" class="w-full h-48 object-cover rounded-3xl mb-6 grayscale hover:grayscale-0 transition">
-            <p class="text-amber-50/80 leading-relaxed mb-4">
-                Paco no solo cosecha miel; cuida el ecosistema. Cada gota es el resultado de un proceso artesanal que respeta los tiempos de la naturaleza.
-            </p>
-            <p class="text-amber-50/80 leading-relaxed italic">
-                "Si ellas son felices, la miel es dulce." - Paco.
-            </p>
+        <section id="nosotros" class="page-section py-20 px-8 bg-amber-950 text-white rounded-[4rem] mx-4 my-12 relative overflow-hidden">
+            <div class="absolute top-0 right-0 p-10 opacity-10">
+                <i class="fas fa-certificate text-[200px]"></i>
+            </div>
+            <div class="relative z-10 reveal">
+                <h2 class="text-5xl font-black text-amber-400 italic mb-8">Paco: Guardián de las Abejas</h2>
+                <div class="md:flex gap-10 items-center">
+                    <img src="https://images.unsplash.com/photo-1473976140626-9abc729ea204?auto=format&fit=crop&w=500" class="w-full md:w-1/2 h-64 object-cover rounded-[3rem] shadow-2xl mb-8 md:mb-0 transform hover:scale-105 transition-transform duration-500">
+                    <div class="space-y-6">
+                        <p class="text-xl text-amber-50/90 leading-relaxed font-medium">
+                            En las tierras de Paco, la miel no es una mercancía, es un regalo. Paco dedica sus días a entender el lenguaje de las flores y el zumbido de sus aliadas aladas.
+                        </p>
+                        <div class="p-6 bg-amber-900/50 rounded-3xl border-l-4 border-amber-400 italic text-amber-200">
+                            "Para obtener la mejor miel, primero hay que amar a quien la crea. Respetamos el ciclo, cuidamos la abeja." - Paco.
+                        </div>
+                    </div>
+                </div>
+            </div>
         </section>
 
-        <!-- Formulario Pedido -->
-        <section id="contacto" class="page-section px-4 py-12">
-            <div class="bg-white rounded-[2.5rem] p-6 shadow-xl border-t-4 border-amber-400">
-                <h2 class="text-3xl font-black text-amber-950 mb-2">Tu Pedido</h2>
-                <p class="text-sm text-amber-800 mb-8">Completa tus datos para enviarle el mensaje a Paco.</p>
+        <!-- Pedido -->
+        <section id="contacto" class="page-section px-6 py-16">
+            <div class="bg-white rounded-[3.5rem] p-8 md:p-12 shadow-2xl border-t-8 border-amber-400 reveal">
+                <div class="flex justify-between items-start mb-10">
+                    <div>
+                        <h2 class="text-4xl font-black text-amber-950 mb-2">Finaliza tu Pedido</h2>
+                        <p class="text-amber-800 font-medium">Estás a un paso de disfrutar lo mejor de la naturaleza.</p>
+                    </div>
+                    <i class="fas fa-paper-plane text-4xl text-amber-100"></i>
+                </div>
                 
-                <form id="order-form" onsubmit="sendOrder(event)" class="space-y-5">
-                    <div>
-                        <label class="block text-[10px] font-bold text-amber-900 uppercase ml-2 mb-1">Nombre</label>
-                        <input required type="text" id="cust-name" class="w-full px-5 py-3 rounded-2xl bg-amber-50 border border-amber-100 outline-none focus:border-amber-400" placeholder="¿Quién recibe?">
+                <form id="order-form" onsubmit="sendOrder(event)" class="grid md:grid-cols-2 gap-8">
+                    <div class="space-y-6">
+                        <div>
+                            <label class="block text-xs font-black text-amber-900 uppercase ml-2 mb-2 tracking-widest">Nombre del Cliente</label>
+                            <input required type="text" id="cust-name" class="w-full px-6 py-4 rounded-2xl bg-amber-50 border-2 border-amber-100 outline-none focus:border-amber-400 transition-all text-amber-950 font-bold placeholder:text-amber-300" placeholder="Ej. Juan Pérez">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-black text-amber-900 uppercase ml-2 mb-2 tracking-widest">WhatsApp de Contacto</label>
+                            <input required type="tel" id="cust-phone" class="w-full px-6 py-4 rounded-2xl bg-amber-50 border-2 border-amber-100 outline-none focus:border-amber-400 transition-all text-amber-950 font-bold placeholder:text-amber-300" placeholder="10 dígitos">
+                        </div>
                     </div>
-                    <div>
-                        <label class="block text-[10px] font-bold text-amber-900 uppercase ml-2 mb-1">WhatsApp</label>
-                        <input required type="tel" id="cust-phone" class="w-full px-5 py-3 rounded-2xl bg-amber-50 border border-amber-100 outline-none focus:border-amber-400" placeholder="Tu número">
+                    <div class="space-y-6">
+                        <div>
+                            <label class="block text-xs font-black text-amber-900 uppercase ml-2 mb-2 tracking-widest">Resumen del Pedido</label>
+                            <textarea id="order-details" readonly rows="5" class="w-full px-6 py-4 rounded-2xl bg-amber-100/30 border-2 border-amber-200 text-sm font-mono resize-none text-amber-900 font-bold"></textarea>
+                        </div>
+                        <button type="submit" class="honey-button w-full py-5 text-white font-black rounded-2xl flex items-center justify-center gap-4 text-lg shadow-lg">
+                            <i class="fab fa-whatsapp text-2xl"></i> ENVIAR A PACO
+                        </button>
                     </div>
-                    <div>
-                        <label class="block text-[10px] font-bold text-amber-900 uppercase ml-2 mb-1">Resumen</label>
-                        <textarea id="order-details" readonly rows="4" class="w-full px-5 py-3 rounded-2xl bg-amber-100/50 border border-amber-200 text-xs font-mono resize-none"></textarea>
-                    </div>
-                    <button type="submit" class="honey-button w-full py-4 text-white font-black rounded-2xl flex items-center justify-center gap-2">
-                        <i class="fab fa-whatsapp text-xl"></i> PEDIR POR WHATSAPP
-                    </button>
                 </form>
             </div>
         </section>
     </main>
 
-    <!-- Modal Precios -->
-    <div id="price-modal" onclick="closePriceMenu()" class="items-end md:items-center justify-center">
-        <div class="bg-white rounded-t-[2.5rem] md:rounded-[2.5rem] w-full max-w-md p-6 max-h-[85vh] overflow-hidden flex flex-col shadow-2xl" onclick="event.stopPropagation()">
-            <div class="flex justify-between items-center mb-6">
-                <h2 id="modal-title" class="text-2xl font-black text-amber-950 uppercase tracking-tighter">Variedades</h2>
-                <button onclick="closePriceMenu()" class="p-2 text-amber-900"><i class="fas fa-times text-xl"></i></button>
-            </div>
-            <div id="modal-content" class="space-y-3 overflow-y-auto pr-2"></div>
-        </div>
-    </div>
-
-    <!-- Carrito -->
-    <div id="cart-drawer" onclick="toggleCart()">
-        <div class="drawer-content p-6 shadow-2xl" onclick="event.stopPropagation()">
-            <div class="flex justify-between items-center mb-6">
-                <h2 class="text-2xl font-black text-amber-950 italic"><i class="fas fa-shopping-basket mr-2"></i>Tu Panal</h2>
-                <button onclick="toggleCart()"><i class="fas fa-times text-2xl text-amber-900"></i></button>
-            </div>
-            <div id="cart-items" class="flex-grow overflow-y-auto space-y-3"></div>
-            <div class="pt-6 mt-4 border-t-2 border-amber-100">
-                <div class="flex justify-between text-xl font-black text-amber-950 mb-4">
-                    <span>Total:</span>
-                    <span id="cart-total">$0.00</span>
+    <!-- Modal de Precios Mejorado -->
+    <div id="price-modal" onclick="closePriceMenu()" class="items-end md:items-center justify-center p-4">
+        <div class="bg-white rounded-[2.5rem] w-full max-w-lg p-8 max-h-[85vh] overflow-hidden flex flex-col shadow-2xl transform transition-all duration-300 scale-100" onclick="event.stopPropagation()">
+            <div class="flex justify-between items-center mb-8">
+                <div>
+                    <h2 id="modal-title" class="text-3xl font-black text-amber-950 uppercase tracking-tighter leading-none">Categoría</h2>
+                    <p class="text-amber-600 font-bold text-sm mt-1">Toca el + para agregar</p>
                 </div>
-                <button onclick="checkout()" class="honey-button w-full py-4 text-white font-black rounded-2xl uppercase text-sm mb-3">
-                    Confirmar Datos
+                <button onclick="closePriceMenu()" class="w-12 h-12 bg-amber-50 rounded-2xl text-amber-900 flex items-center justify-center hover:bg-amber-100 transition-colors">
+                    <i class="fas fa-times text-xl"></i>
                 </button>
-                <button onclick="clearCart()" class="w-full text-[10px] font-bold text-amber-800 opacity-40 uppercase">Limpiar Todo</button>
+            </div>
+            <div id="modal-content" class="space-y-4 overflow-y-auto pr-2 custom-scrollbar">
+                <!-- Items se inyectan aquí -->
             </div>
         </div>
     </div>
 
-    <!-- Firebase -->
+    <!-- Carrito Mejorado -->
+    <div id="cart-drawer" onclick="toggleCart()">
+        <div class="drawer-content p-8 shadow-2xl" onclick="event.stopPropagation()">
+            <div class="flex justify-between items-center mb-10">
+                <div>
+                    <h2 class="text-3xl font-black text-amber-950 italic">Tu Panal</h2>
+                    <p class="text-amber-600 text-xs font-bold uppercase tracking-widest">Resumen de compra</p>
+                </div>
+                <button onclick="toggleCart()" class="w-10 h-10 flex items-center justify-center text-amber-900 hover:rotate-90 transition-transform">
+                    <i class="fas fa-times text-2xl"></i>
+                </button>
+            </div>
+
+            <div id="cart-items" class="flex-grow overflow-y-auto space-y-4 custom-scrollbar">
+                <!-- Items del carrito -->
+            </div>
+
+            <div class="pt-8 mt-6 border-t-4 border-amber-50">
+                <div class="flex justify-between items-center mb-6">
+                    <span class="text-amber-800 font-bold">Inversión dulce:</span>
+                    <span id="cart-total" class="text-3xl font-black text-amber-950">$0.00</span>
+                </div>
+                <button onclick="checkout()" class="honey-button w-full py-5 text-white font-black rounded-3xl uppercase tracking-widest shadow-lg mb-4">
+                    Confirmar Pedido
+                </button>
+                <button onclick="clearCart()" class="w-full text-xs font-black text-amber-800/40 uppercase tracking-widest hover:text-red-400 transition-colors">
+                    Vaciar todo el panal
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Firebase SDKs -->
     <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
 
@@ -326,8 +449,7 @@
             projectId: "pacomieloso",
             storageBucket: "pacomieloso.firebasestorage.app",
             messagingSenderId: "142749522913",
-            appId: "1:142749522913:web:6e496df2b6b72b5ede50a0",
-            measurementId: "G-9R8NNJ39F2"
+            appId: "1:142749522913:web:6e496df2b6b72b5ede50a0"
         };
 
         firebase.initializeApp(firebaseConfig);
@@ -337,51 +459,69 @@
             miel: {
                 title: "Mieles Puras",
                 items: [
-                    { id: 'm1', name: "Multifloral (1L)", price: 15.00, img: "https://images.unsplash.com/photo-1587049352846-4a222e784d38?w=100" },
-                    { id: 'm2', name: "Azahar (1L)", price: 18.00, img: "https://images.unsplash.com/photo-1471943311424-646960669fbc?w=100" },
-                    { id: 'm3', name: "Eucalipto (1L)", price: 17.00, img: "https://images.unsplash.com/photo-1590779033100-9f60702a0532?w=100" }
+                    { id: 'm1', name: "Miel Multifloral (1L)", price: 150.00, img: "https://images.unsplash.com/photo-1587049352846-4a222e784d38?w=200" },
+                    { id: 'm2', name: "Miel de Azahar (1L)", price: 180.00, img: "https://images.unsplash.com/photo-1471943311424-646960669fbc?w=200" },
+                    { id: 'm3', name: "Miel de Eucalipto (1L)", price: 170.00, img: "https://images.unsplash.com/photo-1590779033100-9f60702a0532?w=200" }
                 ]
             },
             dulces: {
                 title: "Derivados",
                 items: [
-                    { id: 'd1', name: "Caramelos (Paq)", price: 5.00, img: "https://images.unsplash.com/photo-1582053433976-25c00369fc93?w=100" },
-                    { id: 'd2', name: "Jalea Real (30g)", price: 25.00, img: "https://images.unsplash.com/photo-1612450798810-7206122d2871?w=100" }
+                    { id: 'd1', name: "Popotes de Miel (Paq)", price: 45.00, img: "https://images.unsplash.com/photo-1582053433976-25c00369fc93?w=200" },
+                    { id: 'd2', name: "Jalea Real (30g)", price: 250.00, img: "https://images.unsplash.com/photo-1612450798810-7206122d2871?w=200" }
                 ]
             },
             toneles: {
                 title: "Mayoreo",
                 items: [
-                    { id: 't1', name: "Cubeta 20L", price: 250.00, img: "https://images.unsplash.com/photo-1582234372722-50d7ccc30ebd?w=100" },
-                    { id: 't2', name: "Tonel 200L", price: 2100.00, img: "https://images.unsplash.com/photo-1518331647614-7a1f04cd34cf?w=100" }
+                    { id: 't1', name: "Cubeta (20L)", price: 2400.00, img: "https://images.unsplash.com/photo-1582234372722-50d7ccc30ebd?w=200" },
+                    { id: 't2', name: "Tonel (200L)", price: 21000.00, img: "https://images.unsplash.com/photo-1518331647614-7a1f04cd34cf?w=200" }
                 ]
             }
         };
 
         let cart = JSON.parse(localStorage.getItem('paco-cart')) || [];
 
+        // Lógica de Scroll Reveal
+        function reveal() {
+            var reveals = document.querySelectorAll(".reveal");
+            for (var i = 0; i < reveals.length; i++) {
+                var windowHeight = window.innerHeight;
+                var elementTop = reveals[i].getBoundingClientRect().top;
+                var elementVisible = 100;
+                if (elementTop < windowHeight - elementVisible) {
+                    reveals[i].classList.add("active");
+                }
+            }
+        }
+
+        window.addEventListener("scroll", reveal);
+
         function showSection(id) {
             document.querySelectorAll('.page-section').forEach(s => s.classList.remove('active'));
             document.getElementById(id).classList.add('active');
             window.scrollTo({ top: 0, behavior: 'smooth' });
+            setTimeout(reveal, 100);
         }
 
         function openPriceMenu(cat) {
             const data = products[cat];
             document.getElementById('modal-title').innerText = data.title;
             const content = document.getElementById('modal-content');
-            content.innerHTML = data.items.map(p => `
-                <div class="flex items-center gap-3 bg-amber-50 p-3 rounded-2xl border border-amber-100">
-                    <img src="${p.img}" class="w-12 h-12 rounded-xl object-cover shadow-sm">
+            
+            content.innerHTML = data.items.map((p, index) => `
+                <div class="flex items-center gap-4 bg-amber-50 p-4 rounded-[2rem] border-2 border-transparent hover:border-amber-200 transition-all reveal active" style="transition-delay: ${index * 100}ms">
+                    <img src="${p.img}" class="w-16 h-16 rounded-2xl object-cover shadow-sm">
                     <div class="flex-grow">
-                        <h4 class="font-bold text-amber-950 text-sm leading-none">${p.name}</h4>
-                        <span class="text-amber-600 font-black text-sm">$${p.price.toFixed(2)}</span>
+                        <h4 class="font-black text-amber-950 text-base leading-tight">${p.name}</h4>
+                        <span class="text-amber-600 font-black text-lg">$${p.price.toFixed(2)}</span>
                     </div>
-                    <button onclick="addToCart('${p.id}', '${p.name}', ${p.price})" class="bg-amber-500 text-white w-8 h-8 rounded-full flex items-center justify-center active:scale-75 transition">
-                        <i class="fas fa-plus text-xs"></i>
+                    <button onclick="addToCart('${p.id}', '${p.name}', ${p.price})" class="bg-amber-500 text-white w-12 h-12 rounded-2xl flex items-center justify-center hover:bg-amber-600 active:scale-75 transition-all shadow-md">
+                        <i class="fas fa-plus"></i>
                     </button>
                 </div>
             `).join('');
+            
             document.getElementById('price-modal').classList.add('open');
         }
 
@@ -393,10 +533,14 @@
             const existing = cart.find(i => i.id === id);
             if (existing) existing.qty++;
             else cart.push({ id, name, price, qty: 1 });
+            
             saveAndUpdate();
+            showAlert(`+1 ${name} añadido`);
+            
+            // Animación de badge
             const badge = document.getElementById('cart-count');
-            badge.style.transform = "scale(1.5)";
-            setTimeout(() => badge.style.transform = "scale(1)", 200);
+            badge.style.transform = "scale(1.5) rotate(15deg)";
+            setTimeout(() => badge.style.transform = "scale(1) rotate(0deg)", 400);
         }
 
         function saveAndUpdate() {
@@ -410,18 +554,23 @@
             const countEl = document.getElementById('cart-count');
 
             if (cart.length === 0) {
-                container.innerHTML = `<p class="text-center py-10 text-amber-800/30 font-bold uppercase text-[10px]">Vacío</p>`;
+                container.innerHTML = `
+                    <div class="flex flex-col items-center justify-center py-20 opacity-20">
+                        <i class="fas fa-box-open text-6xl mb-4"></i>
+                        <p class="font-black uppercase tracking-widest text-xs">Aún no hay miel</p>
+                    </div>
+                `;
             } else {
                 container.innerHTML = cart.map((item, idx) => `
-                    <div class="flex justify-between items-center bg-amber-50 p-3 rounded-2xl">
-                        <div class="max-w-[120px]">
-                            <p class="font-bold text-amber-950 text-xs truncate">${item.name}</p>
-                            <p class="text-amber-600 font-bold text-xs">$${(item.price * item.qty).toFixed(2)}</p>
+                    <div class="flex justify-between items-center bg-amber-50/50 p-4 rounded-3xl border border-amber-100 animate-fadeIn">
+                        <div class="max-w-[160px]">
+                            <p class="font-black text-amber-950 text-sm truncate">${item.name}</p>
+                            <p class="text-amber-600 font-black text-sm">$${(item.price * item.qty).toFixed(2)}</p>
                         </div>
-                        <div class="flex items-center gap-3 bg-white px-3 py-1 rounded-full border border-amber-100">
-                            <button onclick="changeQty(${idx}, -1)" class="text-amber-900 font-bold">-</button>
-                            <span class="text-xs font-black w-4 text-center">${item.qty}</span>
-                            <button onclick="changeQty(${idx}, 1)" class="text-amber-900 font-bold">+</button>
+                        <div class="flex items-center gap-4 bg-white px-4 py-2 rounded-2xl border-2 border-amber-100 shadow-sm">
+                            <button onclick="changeQty(${idx}, -1)" class="text-amber-900 font-black hover:text-amber-500 transition-colors">-</button>
+                            <span class="text-sm font-black w-6 text-center text-amber-950">${item.qty}</span>
+                            <button onclick="changeQty(${idx}, 1)" class="text-amber-900 font-black hover:text-amber-500 transition-colors">+</button>
                         </div>
                     </div>
                 `).join('');
@@ -441,8 +590,11 @@
         }
 
         function clearCart() {
-            cart = [];
-            saveAndUpdate();
+            if(confirm("¿Seguro que quieres vaciar tu pedido?")) {
+                cart = [];
+                saveAndUpdate();
+                toggleCart();
+            }
         }
 
         function toggleCart() {
@@ -452,100 +604,109 @@
         function updateOrderSummary() {
             const area = document.getElementById('order-details');
             if (cart.length === 0) {
-                area.value = "Tu panal está vacío...";
+                area.value = "Tu panal está esperando que lo llenes...";
                 return;
             }
             const items = cart.map(i => `🍯 ${i.name} [x${i.qty}]`).join('\n');
             const total = cart.reduce((s, i) => s + (i.price * i.qty), 0);
-            area.value = `¡Hola Paco! Quiero pedir:\n\n${items}\n\nTotal: $${total.toFixed(2)}`;
+            area.value = `¡Hola Paco! Quiero pedir:\n\n${items}\n\nTotal estimado: $${total.toFixed(2)}`;
         }
 
         function checkout() {
-            if (cart.length === 0) return;
+            if (cart.length === 0) {
+                showAlert("¡Agrega algo delicioso primero!");
+                return;
+            }
             toggleCart();
             showSection('contacto');
+            setTimeout(() => {
+                document.getElementById('cust-name').focus();
+            }, 600);
         }
 
         function showAlert(msg) {
             const box = document.getElementById('alert-box');
             box.innerText = msg;
             box.style.display = 'block';
-            setTimeout(() => box.style.display = 'none', 3000);
+            setTimeout(() => {
+                box.style.display = 'none';
+            }, 3000);
         }
 
         async function sendOrder(e) {
-    e.preventDefault();
+            e.preventDefault();
+            const btn = e.target.querySelector('button');
+            const originalText = btn.innerHTML;
 
-    const name = document.getElementById('cust-name').value.trim();
-    const phone = document.getElementById('cust-phone').value.trim();
+            const name = document.getElementById('cust-name').value.trim();
+            const phone = document.getElementById('cust-phone').value.trim();
 
-    if (cart.length === 0) {
-        showAlert("El carrito está vacío");
-        return;
-    }
+            if (cart.length === 0) {
+                showAlert("Carrito vacío");
+                return;
+            }
 
-    const total = cart.reduce((sum, item) => sum + (item.price * item.qty), 0);
+            btn.innerHTML = `<i class="fas fa-spinner animate-spin"></i> PROCESANDO...`;
+            btn.disabled = true;
 
-    const pedido = {
-        cliente: name,
-        telefono: phone,
-        productos: cart,
-        total: total,
-        fecha: firebase.firestore.FieldValue.serverTimestamp(),
-        estado: "nuevo"
-    };
+            const total = cart.reduce((sum, item) => sum + (item.price * item.qty), 0);
+            const orderNumber = "PM-" + Math.floor(100000 + Math.random() * 900000);
 
-    try {
-        await db.collection("pedidos").add(pedido);
-        showAlert("Pedido guardado ✅");
-    } catch (error) {
-        console.error("Error guardando pedido:", error);
-        showAlert("Error al guardar pedido");
-        return;
-    }
+            const pedido = {
+                orderId: orderNumber,
+                cliente: name,
+                telefono: phone,
+                productos: cart,
+                total: total,
+                fecha: firebase.firestore.FieldValue.serverTimestamp(),
+                estado: "nuevo"
+            };
 
-    // // 🧾 Generar número de pedido automático
-const orderNumber = "MP-" + Date.now().toString().slice(-6);
+            try {
+                await db.collection("pedidos").add(pedido);
+                
+                // Preparar mensaje WhatsApp
+                let msg = `🐝 *NUEVO PEDIDO PACOMIELOSO* 🐝\n`;
+                msg += `━━━━━━━━━━━━━━━━━━━━\n`;
+                msg += `🧾 *Folio:* ${orderNumber}\n`;
+                msg += `👤 *Cliente:* ${name}\n`;
+                msg += `━━━━━━━━━━━━━━━━━━━━\n\n`;
+                
+                cart.forEach(item => {
+                    msg += `🍯 *${item.name}*\n   Cant: ${item.qty} | $${(item.price * item.qty).toFixed(2)}\n\n`;
+                });
 
-// 🕒 Fecha y hora
-const now = new Date();
-const fecha = now.toLocaleDateString("es-MX");
-const hora = now.toLocaleTimeString("es-MX");
+                msg += `━━━━━━━━━━━━━━━━━━━━\n`;
+                msg += `💰 *TOTAL: $${total.toFixed(2)}*\n`;
+                msg += `━━━━━━━━━━━━━━━━━━━━\n\n`;
+                msg += `🌼 _Enviado desde el Reino de la Miel_`;
 
-// 📲 Mensaje WhatsApp NIVEL EMPRESA
-let mensaje = `🐝✨ *PACOMIELOSO - NUEVO PEDIDO* ✨🐝\n`;
-mensaje += `━━━━━━━━━━━━━━━━━━━━\n`;
-mensaje += `🧾 Pedido: *${orderNumber}*\n`;
-mensaje += `📅 Fecha: ${fecha}\n`;
-mensaje += `⏰ Hora: ${hora}\n`;
-mensaje += `━━━━━━━━━━━━━━━━━━━━\n\n`;
+                const waUrl = `https://wa.me/522382200712?text=${encodeURIComponent(msg)}`;
+                
+                showAlert("¡Pedido registrado! Abriendo WhatsApp...");
+                
+                setTimeout(() => {
+                    window.open(waUrl, "_blank");
+                    clearCart();
+                    document.getElementById('order-form').reset();
+                    showSection('inicio');
+                    btn.innerHTML = originalText;
+                    btn.disabled = false;
+                }, 1500);
 
-cart.forEach((item, index) => {
-    const subtotal = (item.price * item.qty).toFixed(2);
-    mensaje += `🍯 *${item.name}*\n`;
-    mensaje += `   ▸ Cantidad: ${item.qty}\n`;
-    mensaje += `   ▸ Precio unit: $${item.price.toFixed(2)}\n`;
-    mensaje += `   ▸ Subtotal: $${subtotal}\n\n`;
-});
+            } catch (error) {
+                console.error(error);
+                showAlert("Error al guardar pedido");
+                btn.innerHTML = originalText;
+                btn.disabled = false;
+            }
+        }
 
-mensaje += `━━━━━━━━━━━━━━━━━━━━\n`;
-mensaje += `💰 *TOTAL GENERAL: $${total.toFixed(2)}*\n`;
-mensaje += `━━━━━━━━━━━━━━━━━━━━\n\n`;
-mensaje += `👤 *Cliente:* ${name}\n`;
-mensaje += `📞 *WhatsApp:* ${phone}\n\n`;
-mensaje += `🌼 Pedido generado desde la tienda web`;
-
-    const whatsappURL = `https://wa.me/522371062600?text=${encodeURIComponent(mensaje)}`;
-    window.open(whatsappURL, "_blank");
-
-    // Limpiar carrito
-    clearCart();
-    document.getElementById('cust-name').value = '';
-    document.getElementById('cust-phone').value = '';
-    showSection('inicio');
-}
+        // Inicializar vistas
+        window.onload = () => {
+            updateCartUI();
+            reveal();
+        };
     </script>
 </body>
 </html>
-
-
