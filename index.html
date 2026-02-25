@@ -835,23 +835,29 @@ window.addEventListener("DOMContentLoaded", reveal);
             try {
                 await db.collection("pedidos").add(pedido);
                 
-                // Preparar mensaje WhatsApp
-                let msg = `🐝 *NUEVO PEDIDO PACOMIELOSO* 🐝\n`;
-                msg += `━━━━━━━━━━━━━━━━━━━━\n`;
-                msg += `🧾 *Folio:* ${orderNumber}\n`;
-                msg += `👤 *Cliente:* ${name}\n`;
-                msg += `━━━━━━━━━━━━━━━━━━━━\n\n`;
-                
-                cart.forEach(item => {
-                    msg += `🍯 *${item.name}*\n   Cant: ${item.qty} | $${(item.price * item.qty).toFixed(2)}\n\n`;
-                });
+               // Preparar mensaje WhatsApp
+llet msg = `🐝✨ *¡NUEVO PEDIDO PACOMIELOSO!* ✨🐝\n`;
+msg += `━━━━━━━━━━━━━━━━━━\n\n`;
 
-                msg += `━━━━━━━━━━━━━━━━━━━━\n`;
-                msg += `💰 *TOTAL: $${total.toFixed(2)}*\n`;
-                msg += `━━━━━━━━━━━━━━━━━━━━\n\n`;
-                msg += `🌼 _Enviado desde el Reino de la Miel_`;
+msg += `🧾 *Folio:* ${orderNumber}\n`;
+msg += `👤 *Cliente:* ${name}\n\n`;
 
-                const waUrl = `https://wa.me/522382200712?text=${encodeURIComponent(msg)}`;
+msg += `🍯 *DETALLE DEL PEDIDO*\n`;
+msg += `━━━━━━━━━━━━━━━━━━\n`;
+
+cart.forEach((item, index) => {
+    msg += `🔸 ${index + 1}. *${item.name}*\n`;
+    msg += `   📦 Cant: ${item.qty}\n`;
+    msg += `   💲 Subtotal: $${(item.price * item.qty).toFixed(2)}\n\n`;
+});
+
+msg += `━━━━━━━━━━━━━━━━━━\n`;
+msg += `💰🔥 *TOTAL: $${total.toFixed(2)}* 🔥💰\n`;
+msg += `━━━━━━━━━━━━━━━━━━\n\n`;
+
+msg += `🌼 Gracias por elegir lo natural 🍃\n`;
+msg += `👑 Desde el Reino de la Miel 🍯`;
+                const waUrl = `https://wa.me/522371062600?text=${encodeURIComponent(msg)}`;
                 
                 showAlert("¡Pedido registrado! Abriendo WhatsApp...");
                 
