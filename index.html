@@ -842,7 +842,7 @@ msg += `════════════════════\n\n`;
 msg += `🧾 *Folio:* ${orderNumber}\n`;
 msg += `👤 *Cliente:* ${name}\n\n`;
 
-msg += `🛒🍯 *DETALLE DEL PEDIDO* 🍯🛒\n`;
+msg += `🍯 *DETALLE DEL PEDIDO* 🍯\n`;
 msg += `────────────────────\n`;
 
 cart.forEach((item, index) => {
@@ -854,8 +854,8 @@ msg += `════════════════════\n`;
 msg += `💰🔥 *TOTAL: $${total.toFixed(2)}* 🔥💰\n`;
 msg += `════════════════════\n\n`;
 
-msg += `🌼🍃 Gracias por elegir lo natural 🍃🌼\n`;
-msg += `👑🍯 _Desde el Reino de la Miel**PACO**_ 🍯👑`;
+msg += `🌼 Gracias por elegir lo natural 🌼\n`;
+msg += `👑🍯 Desde el Reino de la Miel 🍯👑`;
                 const waUrl = `https://wa.me/522371062600?text=${encodeURIComponent(msg)}`;
                 
                 showAlert("¡Pedido registrado! Abriendo WhatsApp...");
@@ -1023,3 +1023,4 @@ window.addEventListener("load", function () {
 </script> 
 </body>
 </html>
+
