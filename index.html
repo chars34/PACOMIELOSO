@@ -6,6 +6,7 @@
     <title>Pacomieloso | El Reino de la Miel</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@400;700&family=Playfair+Display:ital,wght@0,900;1,900&display=swap');
 
@@ -29,6 +30,174 @@
         h1, h2, h3 {
             font-family: 'Playfair Display', serif;
         }
+        .bee-follower {
+    position: fixed;
+    font-size: 22px;
+    pointer-events: none;
+    transform: translate(-50%, -50%);
+    z-index: 9999;
+}
+        /* ===== ABEJAS QUE SIGUEN EL CURSOR ===== */
+.bee-follower {
+  position: fixed;
+  font-size: 22px;
+  pointer-events: none;
+  z-index: 99999;
+  transition: transform 0.08s linear;
+  filter: drop-shadow(0 4px 6px rgba(0,0,0,0.3));
+  animation: beeFloat 1.5s infinite ease-in-out alternate;
+}
+
+@keyframes beeFloat {
+  0% { transform: translateY(-3px); }
+  100% { transform: translateY(3px); }
+}
+        /* ===== ABEJAS ===== */
+.bee {
+  position: fixed;
+  font-size: 22px;
+  z-index: 99999;
+  pointer-events: none;
+  animation: beeFly 1.8s ease-out forwards;
+  filter: drop-shadow(0 4px 6px rgba(0,0,0,0.3));
+}
+
+@keyframes beeFly {
+  0% {
+    transform: translate(0,0) scale(0.5) rotate(0deg);
+    opacity: 0;
+  }
+  20% {
+    opacity: 1;
+  }
+  40% {
+    transform: translate(var(--x1), var(--y1)) rotate(20deg);
+  }
+  70% {
+    transform: translate(var(--x2), var(--y2)) rotate(-20deg);
+  }
+  100% {
+    transform: translate(var(--x3), -120px) scale(0.7) rotate(40deg);
+    opacity: 0;
+  }
+}
+        /* ===== CAMERA SHAKE ===== */
+@keyframes cameraShake {
+  0% { transform: translate(0, 0); }
+  20% { transform: translate(-6px, 6px); }
+  40% { transform: translate(6px, -6px); }
+  60% { transform: translate(-6px, -6px); }
+  80% { transform: translate(6px, 6px); }
+  100% { transform: translate(0, 0); }
+}
+
+.camera-shake {
+  animation: cameraShake 0.3s ease;
+}
+        /* ===== MIEL LÍQUIDA REAL ===== */
+.honey-drop-real {
+  position: fixed;
+  width: 18px;
+  height: 26px;
+  border-radius: 50% 50% 60% 60%;
+  background: linear-gradient(
+    180deg,
+    #fff6a3 0%,
+    #ffd54f 30%,
+    #ffb300 60%,
+    #f57c00 100%
+  );
+  box-shadow:
+    inset -3px -6px 6px rgba(0,0,0,0.2),
+    inset 2px 2px 4px rgba(255,255,255,0.6),
+    0 6px 10px rgba(255, 170, 0, 0.4);
+  pointer-events: none;
+  z-index: 99999;
+  animation: honeyFall 1.2s ease-out forwards;
+  transform-origin: top;
+}
+
+@keyframes honeyFall {
+  0% {
+    transform: translate(0,0) scaleY(1);
+    opacity: 1;
+  }
+  40% {
+    transform: translate(var(--x), var(--y)) scaleY(1.6);
+  }
+  100% {
+    transform: translate(var(--x), 150px) scaleY(0.8);
+    opacity: 0;
+  }
+}
+        /* Explosión de miel */
+.honey-splash {
+    position: fixed;
+    pointer-events: none;
+    z-index: 99999;
+    font-size: 18px;
+    animation: splashMove 800ms ease-out forwards;
+}
+
+@keyframes splashMove {
+    0% {
+        transform: scale(1) translate(0,0);
+        opacity: 1;
+    }
+    100% {
+        transform: translate(var(--x), var(--y)) scale(0.5);
+        opacity: 0;
+    }
+}
+
+/* Vibración carrito */
+.cart-shake {
+    animation: shakeCart 400ms ease;
+}
+
+@keyframes shakeCart {
+    0% { transform: rotate(0deg); }
+    25% { transform: rotate(8deg); }
+    50% { transform: rotate(-8deg); }
+    75% { transform: rotate(5deg); }
+    100% { transform: rotate(0deg); }
+}
+     #jar-container{
+    position: fixed;
+    bottom: 20px;
+    left: 20px;
+    font-size: 60px;
+    z-index: 50000;
+}
+
+/* Abejas */
+.flying-bee{
+    position: fixed;
+    font-size: 22px;
+    pointer-events: none;
+    z-index: 99999;
+    animation: beeFlight linear forwards;
+}
+
+/* Movimiento tipo vuelo real */
+@keyframes beeFlight{
+    0%{
+        transform: translate(0,0);
+    }
+    25%{
+        transform: translate(150px,-60px);
+    }
+    50%{
+        transform: translate(300px,40px);
+    }
+    75%{
+        transform: translate(500px,-30px);
+    }
+    100%{
+        transform: translate(100vw,-20px);
+        opacity:0;
+    }
+}
 
         /* --- Animaciones de Entrada --- */
         .reveal {
@@ -208,8 +377,11 @@
         }
     </style>
 </head>
-<body class="antialiased">
 
+<body class="antialiased">
+<div id="jar-container">
+    🍯
+</div>
     <div id="alert-box" class="custom-alert"></div>
 
     <!-- Abeja Animada -->
@@ -230,10 +402,14 @@
                 <span class="text-xl font-black text-amber-950 italic uppercase tracking-tighter">PACOMIELOSO</span>
             </div>
             
-            <button onclick="toggleCart()" class="relative bg-amber-50 p-3 rounded-2xl text-amber-800 hover:bg-amber-100 active:scale-90 transition-all border border-amber-200">
-                <i class="fas fa-shopping-basket text-xl"></i>
-                <span id="cart-count" class="cart-badge">0</span>
-            </button>
+          <button 
+    id="cart-btn"
+    onclick="toggleCart(); honeyExplosion();"
+    class="relative bg-amber-50 p-3 rounded-2xl text-amber-800 hover:bg-amber-100 active:scale-90 transition-all border border-amber-200"
+>
+    <i class="fas fa-shopping-basket text-xl"></i>
+    <span id="cart-count" class="cart-badge">0</span>
+</button>
         </div>
         <div class="dripping-honey opacity-50"></div>
     </nav>
@@ -442,6 +618,7 @@
     <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
 
     <script>
+   
         // Configuración de Firebase
         const firebaseConfig = {
             apiKey: "AIzaSyD5UHwusfw0CZKsx34KCjOxlRgOGhW7dXc",
@@ -536,6 +713,7 @@
             
             saveAndUpdate();
             showAlert(`+1 ${name} añadido`);
+            flyBeeToCart();
             
             // Animación de badge
             const badge = document.getElementById('cart-count');
@@ -702,11 +880,150 @@
             }
         }
 
-        // Inicializar vistas
-        window.onload = () => {
-            updateCartUI();
-            reveal();
-        };
-    </script>
+/* ===== VARIABLES DEL ENJAMBRE ===== */
+let bees = [];
+let mouseX = window.innerWidth / 2;
+let mouseY = window.innerHeight / 2;
+
+/* Detectar movimiento del mouse */
+document.addEventListener("mousemove", (e) => {
+    mouseX = e.clientX;
+    mouseY = e.clientY;
+});
+
+
+
+function spawnSwarm(count = 12) {
+
+    for (let i = 0; i < count; i++) {
+
+        const bee = document.createElement("div");
+        bee.className = "bee-follower";
+        bee.innerHTML = "🐝";
+
+        document.body.appendChild(bee);
+
+        bees.push({
+            el: bee,
+            x: Math.random() * window.innerWidth,
+            y: Math.random() * window.innerHeight,
+            vx: 0,
+            vy: 0
+        });
+    }
+}
+
+function animateSwarm() {
+
+    bees.forEach((bee, index) => {
+
+        // 🐝 ATRACCIÓN AL CURSOR
+        let dx = mouseX - bee.x;
+        let dy = mouseY - bee.y;
+
+        bee.vx += dx * 0.0008;
+        bee.vy += dy * 0.0008;
+
+        // 🐝 SEPARACIÓN ENTRE ABEJAS
+        bees.forEach((other, i) => {
+            if (index === i) return;
+
+            let distX = bee.x - other.x;
+            let distY = bee.y - other.y;
+            let distance = Math.sqrt(distX * distX + distY * distY);
+
+            if (distance < 40) {
+                bee.vx += distX * 0.02;
+                bee.vy += distY * 0.02;
+            }
+        });
+
+        // 🐝 LIGERO MOVIMIENTO ORGÁNICO
+        bee.vx += (Math.random() - 0.5) * 0.3;
+        bee.vy += (Math.random() - 0.5) * 0.3;
+
+        // 🐝 FRICCIÓN (para que no se disparen)
+        bee.vx *= 0.92;
+        bee.vy *= 0.92;
+
+        bee.x += bee.vx;
+        bee.y += bee.vy;
+
+        bee.el.style.left = bee.x + "px";
+        bee.el.style.top = bee.y + "px";
+
+        // 🐝 ROTACIÓN SEGÚN DIRECCIÓN
+        let angle = Math.atan2(bee.vy, bee.vx) * 180 / Math.PI;
+        bee.el.style.transform = `translate(-50%, -50%) rotate(${angle}deg)`;
+    });
+
+    requestAnimationFrame(animateSwarm);
+}
+        
+
+/* ===== EXPLOSIÓN DE MIEL ===== */
+/* ===== EXPLOSIÓN DE MIEL CORREGIDA ===== */
+function honeyExplosion() {
+
+    const cartBtn = document.getElementById("cart-btn");
+    if (!cartBtn) return;
+
+    document.body.classList.add("camera-shake");
+    setTimeout(() => {
+        document.body.classList.remove("camera-shake");
+    }, 300);
+
+    const rect = cartBtn.getBoundingClientRect();
+
+    // 🍯 GOTAS DE MIEL
+    for (let i = 0; i < 18; i++) {
+
+        const drop = document.createElement("div");
+        drop.className = "honey-drop-real";
+
+        drop.style.left = rect.left + rect.width / 2 + "px";
+        drop.style.top = rect.top + rect.height / 2 + "px";
+
+        const x = (Math.random() - 0.5) * 140 + "px";
+        const y = (Math.random() * 80) + "px";
+
+        drop.style.setProperty("--x", x);
+        drop.style.setProperty("--y", y);
+
+        document.body.appendChild(drop);
+
+        setTimeout(() => drop.remove(), 1200);
+    }
+
+    // 🐝 ABEJAS VOLANDO
+    for (let i = 0; i < 6; i++) {
+
+        const bee = document.createElement("div");
+        bee.className = "bee";
+        bee.innerHTML = "🐝";
+
+        bee.style.left = rect.left + rect.width / 2 + "px";
+        bee.style.top = rect.top + rect.height / 2 + "px";
+
+        bee.style.setProperty("--x1", (Math.random() - 0.5) * 100 + "px");
+        bee.style.setProperty("--y1", (Math.random() - 0.5) * 80 + "px");
+        bee.style.setProperty("--x2", (Math.random() - 0.5) * 140 + "px");
+        bee.style.setProperty("--y2", (Math.random() - 0.5) * 100 + "px");
+        bee.style.setProperty("--x3", (Math.random() - 0.5) * 200 + "px");
+
+        document.body.appendChild(bee);
+
+        setTimeout(() => bee.remove(), 1800);
+    }
+    
+}
+/* ===== INICIAR ENJAMBRE AL CARGAR ===== */
+
+window.addEventListener("load", function () {
+    spawnSwarm(10);   // cantidad de abejas
+    animateSwarm();   // iniciar animación
+});
+</script>
+    
 </body>
 </html>
