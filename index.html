@@ -664,7 +664,7 @@
         }
 
         window.addEventListener("scroll", reveal);
-
+window.addEventListener("DOMContentLoaded", reveal);
         function showSection(id) {
             document.querySelectorAll('.page-section').forEach(s => s.classList.remove('active'));
             document.getElementById(id).classList.add('active');
@@ -1014,7 +1014,6 @@ window.addEventListener("load", function () {
     spawnSwarm(10);   // cantidad de abejas
     animateSwarm();   // iniciar animación
 });
-</script>
-    
+</script> 
 </body>
 </html>
